@@ -1,0 +1,6 @@
+(fp_lib_table
+  (lib (name "doit-esp32-devkit-kicad-master")(type "KiCad")(uri "C:/Users/James/Desktop/brother/pcb-esp32/libraries/doit-esp32-devkit-kicad-master")(options "")(descr ""))
+  (lib (name "flash-chip")(type "KiCad")(uri "C:/Users/James/Desktop/brother/pcb-esp32/libraries/flash-chip")(options "")(descr ""))
+  (lib (name "esp32-wroom-library")(type "KiCad")(uri "C:/Users/James/Desktop/brother/pcb-esp32/libraries/esp32-wroom-library")(options "")(descr ""))
+  (lib (name "mcp23016")(type "KiCad")(uri "${KIPRJMOD}/libraries/mcp23016")(options "")(descr ""))
+)
