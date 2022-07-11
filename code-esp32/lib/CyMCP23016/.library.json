@@ -1,0 +1,27 @@
+{
+    "name": "CyMCP23016",
+    "repository": {
+        "url": "https://github.com/cyrusbuilt/CyMCP23016.git",
+        "type": "git"
+    },
+    "platforms": [
+        "arduino"
+    ],
+    "version": "1.0.1",
+    "authors": [
+        {
+            "url": "http://cyrusbuilt.net",
+            "maintainer": true,
+            "email": "cyrusbuilt@gmail.com",
+            "name": "Chris (Cyrus) Brunner"
+        }
+    ],
+    "keywords": [
+        "mcp23016",
+        "microchip",
+        "expander",
+        "i/o"
+    ],
+    "id": null,
+    "description": "A library to interface with the Micrchip MCP23016 I/O expander via I2C."
+}
