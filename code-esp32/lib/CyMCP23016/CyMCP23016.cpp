@@ -116,3 +116,15 @@ bool CyMCP23016::detected() {
     Wire.beginTransmission(MCP23016_ADDRESS | this->_i2cAddr);
     return (Wire.endTransmission() == 0);
 }
+
+void CyMCP23016::debug() {
+    Wire.beginTransmission(MCP23016_ADDRESS | this->_i2cAddr);
+    Wire.write(MCP23016_IOCON0);
+    Wire.write(0x1);
+    Wire.endTransmission();
+
+    Wire.beginTransmission(MCP23016_ADDRESS | this->_i2cAddr);
+    Wire.write(MCP23016_IOCON1);
+    Wire.write(0x1);
+    Wire.endTransmission();
+}

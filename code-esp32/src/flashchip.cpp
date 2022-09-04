@@ -12,6 +12,11 @@ void FlashChip::init() {
   digitalWrite(A17, LOW);
   digitalWrite(A18, LOW);
 
+  ceState = -1;
+  oeState = -1;
+  weState = -1;
+  dataState = -1;
+
   mcp.begin();
   for (int i = 0; i <= MCP23016_PIN_GPIO1_7; i++) {
     while (!mcp.detected()) {
@@ -32,6 +37,7 @@ void FlashChip::sendCmd(uint32_t addr, uint8_t dat) {
   CONTROL_PIN(CE, LOW);
   CONTROL_PIN(OE, HIGH);
   CONTROL_PIN(WE, HIGH);
+  // delayMicroseconds(20);
 
   mcp.writeAllPins(addr);
   digitalWrite(A16, addr >> 16 & 1);
@@ -43,6 +49,15 @@ void FlashChip::sendCmd(uint32_t addr, uint8_t dat) {
   for (uint8_t addr = 0; addr < DATA_ADDRESSES_SIZE; addr++) {
     digitalWrite(data_addresses[addr], (dat >> addr) & 1);
   }
+
+  // TEST2(dat, 0, Q0);
+  // TEST2(dat, 1, Q1);
+  // TEST(dat, 2, Q2);
+  // TEST(dat, 3, Q3);
+  // TEST(dat, 4, Q4);
+  // TEST(dat, 5, Q5);
+  // TEST(dat, 6, Q6);
+  // TEST(dat, 7, Q7);
 
   CONTROL_PIN(WE, HIGH);
 }
@@ -77,7 +92,10 @@ uint8_t FlashChip::readOneByte(uint32_t addr) {
   CONTROL_PIN(OE, LOW);
 
   mcp.writeAllPins(addr);
-  delayMicroseconds(1);
+  digitalWrite(A16, addr >> 16 & 1);
+  digitalWrite(A17, addr >> 17 & 1);
+  digitalWrite(A18, addr >> 18 & 1);
+  delayMicroseconds(20);
 
   uint8_t dat = 0;
   for (uint8_t addr = 0; addr < DATA_ADDRESSES_SIZE; addr++) {
@@ -110,4 +128,8 @@ uint8_t FlashChip::serialVersion() {
   sendCmd(0x5555, 0xF0);
 
   return serial;
+}
+
+void FlashChip::debug() {
+  mcp.debug();
 }

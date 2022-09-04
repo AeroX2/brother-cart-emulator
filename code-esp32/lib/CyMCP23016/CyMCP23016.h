@@ -119,6 +119,8 @@ public:
      * @returns true if the device was detected; Otherwise, false.
      */
     bool detected();
+
+    void debug();
 private:
     /**
      * Gets the bit number associated with a given pin.

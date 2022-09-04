@@ -3,4 +3,5 @@
   (lib (name "flash-chip")(type "KiCad")(uri "C:/Users/James/Desktop/brother/pcb-esp32/libraries/flash-chip")(options "")(descr ""))
   (lib (name "esp32-wroom-library")(type "KiCad")(uri "C:/Users/James/Desktop/brother/pcb-esp32/libraries/esp32-wroom-library")(options "")(descr ""))
   (lib (name "mcp23016")(type "KiCad")(uri "${KIPRJMOD}/libraries/mcp23016")(options "")(descr ""))
+  (lib (name "Resistor")(type "KiCad")(uri "${KIPRJMOD}/libraries/Resistor.pretty")(options "")(descr ""))
 )

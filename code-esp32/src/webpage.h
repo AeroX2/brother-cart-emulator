@@ -8,7 +8,8 @@ const char index_html[] PROGMEM = R"rawliteral(
 <body>
   <p id="serverStatus">Polling server...</p>
   <p id="status"></p>
-  <button onclick="writeImage()">Write image</button>
+  <!--<button onclick="writeImage()">Write image</button>-->
+  <button onclick="connectMachine()">Connect!</button>
   <h3>Upload File<h3>
   <form id="upload_form" enctype="multipart/form-data" method="post">
     <input type="file" name="file1" id="file1" onchange="uploadFile()"><br>
@@ -21,9 +22,14 @@ const char index_html[] PROGMEM = R"rawliteral(
 function _(el) {
   return document.getElementById(el);
 }
-function writeImage() {
+// function writeImage() {
+//   xmlhttp=new XMLHttpRequest();
+//   xmlhttp.open("POST", "/write", false);
+//   xmlhttp.send();
+// }
+function connectMachine() {
   xmlhttp=new XMLHttpRequest();
-  xmlhttp.open("POST", "/write", false);
+  xmlhttp.open("POST", "/connect", false);
   xmlhttp.send();
 }
 function uploadFile() {
@@ -67,7 +73,7 @@ function pollServer() {
   request.send();
   setTimeout(pollServer,1000);
 }
-pollServer();
+// pollServer();
 </script>
 </body>
 </html>
