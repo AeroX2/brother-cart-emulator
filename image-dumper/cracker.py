@@ -23,7 +23,6 @@ patches = {
     0x10005E6B: 0xEB,
 }
 
-
 import r2pipe
 r = r2pipe.open('pelite.exe', ['-w'])
 
@@ -47,10 +46,15 @@ for patch_addr, patch_val in patches.items():
 offset = cardio_addr + 0x6ad2
 r.cmd("dcu {}".format(offset))
 
-#r.cmd("dcu 0x10005d94")
-
-
-mem = r.cmdj("p8j 4 @ rcx")
+# r2pipe has some weird buffering issue with json commands and 
+# doesn't seem to work the first time
+mem = None
+for i in range(5):
+    mem = r.cmdj("p8j 4 @ rcx")
+    if (mem != None and len(mem) > 0):
+        break
+ 
+    
 print(mem)
 mem = struct.pack("4B", *mem)
 print(mem)
@@ -60,7 +64,12 @@ print(mem)
 offset = cardio_addr + 0x6b0e
 r.cmd("dcu {}".format(offset))
 
-data = bytes(r.cmdj("pxj 0x10000 @ {}".format(mem)))
+# Ditto
+data = None
+for i in range(5):
+    data = bytes(r.cmdj("pxj 0x10000 @ {}".format(mem)))
+    if (data != None and len(data) > 0):
+        break
 
 f = open("image.bin", "wb")
 f.write(data)
