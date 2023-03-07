@@ -5,3 +5,15 @@ Once the program opens, add the PES file, hit the arrow to move it to the chip s
 this should dump a image.bin which can be used in a custom flash chip.
 
 Make sure `cracker.py` has write permission for pelite.exe
+
+
+# Technical information about the patches
+
+ChkCardVolume seems to contact the EEPROM and check that the data is formatted correctly and not corrupted.
+
+0x4136EA - 0x4136EF -> Bypass ChkCardVolume (pelite.exe) ![Reverse 1](images/reverse1.jpg?raw=true "Reverse 1")
+0x41C7C1 - 0x41C7C2 -> Bypass ChkCardVolume (pelite.exe) ![Reverse 2](images/reverse2.jpg?raw=true "Reverse 2")
+0x413DF1 -> Bypass ChkCardVolume (pelite.exe) ![Reverse 3](images/reverse3.jpg?raw=true "Reverse 3")
+0x10005DD8 -> Bypass check that EEPROM exists (CardIO.dll) ![Reverse 4](images/reverse4.jpg?raw=true "Reverse 4")
+0x10005E20 -> Bypass check that calls ChkCardVolume (CardIO.dll) ![Reverse 5](images/reverse5.jpg?raw=true "Reverse 5")
+0x10005E6B -> Force the card size to 0x80000 bytes (CardIO.dll) ![Reverse 6](images/reverse6.jpg?raw=true "Reverse 6")
