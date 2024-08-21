@@ -28,7 +28,7 @@ r = r2pipe.open('pelite.exe', ['-w'])
 
 print(r.cmd("ood; dc; dc;"))
 
-relocs = r.cmd("ir")
+relocs = r.cmd("dmij")
 print(relocs)
 relocs = relocs.split("\n")
 cardios = [line for line in relocs if "CardIO.dll" in line]
