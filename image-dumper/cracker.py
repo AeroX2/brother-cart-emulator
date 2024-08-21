@@ -32,7 +32,7 @@ relocs = r.cmd("dmij")
 print(relocs)
 relocs = relocs.split("\n")
 cardios = [line for line in relocs if "CardIO.dll" in line]
-cardio_addr = int(re.findall(r"0x([0-9A-F]+)", cardios[-1])[0],16)
+cardio_addr = int(re.findall(r"0x([0-9A-Fa-f]+)", cardios[-1])[0],16)
 
 for patch_addr, patch_val in patches.items():
     if (patch_addr > 0x10000000):
