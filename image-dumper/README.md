@@ -7,7 +7,7 @@ this should dump a image.bin which can be used in a custom flash chip.
 Make sure `cracker.py` has write permission for pelite.exe
 
 
-# Technical information about the patches
+## Technical information about the patches
 
 `ChkCardVolume` seems to contact the EEPROM and check that the data is formatted correctly and not corrupted.
 
@@ -22,3 +22,9 @@ Make sure `cracker.py` has write permission for pelite.exe
 0x10005E20 -> Bypass check that calls ChkCardVolume (CardIO.dll) ![Reverse 5](./images/reverse5.png?raw=true "Reverse 5")
 
 0x10005E6B -> Force the card size to 0x80000 bytes (CardIO.dll) ![Reverse 6](./images/reverse6.png?raw=true "Reverse 6")
+
+
+## Tested configurations
+
+* AeroX2: Windows 11 + PED-Basic 1.07 (CardIO.dll 3.2.1.1) + Python 3.12.0 + r2pipe 1.9.4 + radare2-5.9.4-w64
+* maehw: Windows 10 + PED-Basic 1.07 (CardIO.dll 3.2.1.1) + Python 3.12.5 + r2pipe 1.9.4 + radare2-5.8.2-w64 / radare2-5.9.4-w64
