@@ -26,5 +26,5 @@ Make sure `cracker.py` has write permission for pelite.exe
 
 ## Tested configurations
 
-* AeroX2: Windows 11 + PED-Basic 1.07 (CardIO.dll 3.2.1.1?) + Python 3.12.0 + r2pipe 1.9.4 + radare2-???
+* AeroX2: Windows 11 + PED-Basic 1.07 (CardIO.dll 3.2.1.1) + Python 3.12.0 + r2pipe 1.9.4 + radare2-5.9.4-w64
 * maehw: Windows 10 + PED-Basic 1.07 (CardIO.dll 3.2.1.1) + Python 3.12.5 + r2pipe 1.9.4 + radare2-5.8.2-w64 / radare2-5.9.4-w64
