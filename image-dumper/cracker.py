@@ -43,8 +43,26 @@ relocs = r.cmd("dmij")
 print("Printing target library symbols...")
 print(relocs)
 relocs = relocs.split("\n")
-cardios = [line for line in relocs if "CardIO.dll" in line]
+libname = "CardIO.dll"
+cardios = [line for line in relocs if libname in line]
 cardio_addr = int(re.findall(r"0x([0-9A-Fa-f]+)", cardios[-1])[0],16)
+
+imports = r.cmd("ii")
+imports = imports.split("\n")
+print("Printing imported CardIO functions...")
+for imp in imports:
+    imp = imp.split()
+    if len(imp) > 6 and imp[3] == 'FUNC' and imp[4] == libname:
+        func_addr = imp[1]
+        func_signature = "".join(imp[6:])
+        print("signature: {}, address: {}".format(func_signature, func_addr))
+
+        f = r.cmd("pxw 4 @ {}".format(func_addr))
+        f = f.split()
+        f = int(f[1], 16)
+        #f += 0x10000000
+        # f -= cardio_addr
+        print("32 bit word: 0x{:x}".format(f))
 
 print("Applying patches...")
 for patch_addr, patch_val in patches.items():
@@ -53,7 +71,7 @@ for patch_addr, patch_val in patches.items():
         patch_addr += cardio_addr
 
     # apply patches by writing known values at known addresses ("w [str] [@addr]")
-    cmd = "w \\x{:x} @ {}".format(patch_val, patch_addr)
+    cmd = "w \\x{:x} @ 0x{:x}".format(patch_val, patch_addr)
     print(cmd)
     r.cmd(cmd)
 
