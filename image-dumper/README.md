@@ -1,11 +1,41 @@
-Place radare2 and cracker.py in the same directory as PED-Basic
+# README
 
-Run `python cracker.py` in cmd from the PED-Basic directory. 
-Once the program opens, add the PES file, hit the arrow to move it to the chip side of the screen and then hit the write to card button,
-this should dump a image.bin which can be used in a custom flash chip.
+## Usage
 
-Make sure `cracker.py` has write permission for pelite.exe
+Place radare2 (the free reversing toolkit) and `cracker.py` (the Python script from this repository) in the same directory as PED-Basic.
 
+Run `python cracker.py` in Windows command line (`cmd`) from the PED-Basic directory. 
+Once PED-Basic opens, add the PES file, hit the arrow to move it to the chip side of the screen and then hit the write to card button,
+this should dump a `image.bin` which can be used in a custom flash chip.
+
+Make sure `cracker.py` has write permission for `pelite.exe`.
+
+There are various command line options to change the default search paths (so that neither PED-Basic nor radare2 must be in the same directory) and the embroidery memory card size:
+
+Run `python cracker.py --help` to list the options:
+
+```
+usage: cracker.py [-h] [-cs {64,128,256}] [-r2b RADARE2_BINPATH]
+                  [-pedb PEDBASIC_BINPATH] [-o OUTPUT]
+
+Embroidery Card Image Dumping Tool
+
+options:
+  -h, --help            show this help message and exit
+  -cs {64,128,256}, --card-size {64,128,256}
+                        Size of the memory card in kiBytes (valid options: 64,
+                        128, 256). Default is 64 kiBytes.
+  -r2b RADARE2_BINPATH, --radare2-binpath RADARE2_BINPATH
+                        Path to the radare2 binary (folder, not the binary
+                        itself). Default is './radare2/bin' relative to the
+                        current working directory.
+  -pedb PEDBASIC_BINPATH, --pedbasic-binpath PEDBASIC_BINPATH
+                        Path to the PED-Basic binary (folder, not the
+                        'pelite.exe' binary itself). Default is the current
+                        working directory.
+  -o OUTPUT, --output OUTPUT
+                        Path to the output file. Default is 'image.bin'.
+```
 
 ## Technical information about the patches
 
