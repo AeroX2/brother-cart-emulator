@@ -8,18 +8,20 @@ from math import log2
 
 
 tool_description = "Embroidery Card Image Dumping Tool"
-card_sizes_kb = [64, 128, 256]  # the set of supported embroidery memory card sizes (in kiBytes)
+card_sizes_kb = [512, 1024, 2048]  # the set of supported embroidery memory card sizes (in kiBytes)
 
 def parse_args():
     parser = argparse.ArgumentParser(description=tool_description)
 
     # memory card size argument
+    default_card_size = min(card_sizes_kb)
     parser.add_argument(
         "-cs", "--card-size",
         type=int,
         choices=card_sizes_kb,
-        default=64,
-        help="Size of the memory card in kiBytes (valid options: 64, 128, 256). Default is 64 kiBytes."
+        default=default_card_size,
+        help="Size of the memory card in kiBytes (valid choices: {}). Default is {} kiBytes.".format(
+            ','.join(([str(x) for x in card_sizes_kb])), default_card_size)
     )
 
     # radare2 binary path argument
@@ -61,67 +63,73 @@ os.environ["PATH"] += os.pathsep + cli_args.radare2_binpath
 
 ped_exec = os.path.join(cli_args.pedbasic_binpath, 'pelite.exe')
 
+dll_offset = 0x10000000
+
 # the patches dictionary contains x86 opcodes to be replaced at pre-known locations;
 # this is where the magic happens
 patches = {
     # 0x90: Mnemonic "NOP" ("No Operation")
     # 0xEB: Mnemonic "JMP rel8" ("Short Relative Jump")
+
+    # ignore result values other than 0x18 from function at 0x0041343d which itself calls CCardIO::ChkCardVolume()
     0x4136EA: 0x90,
     0x4136EB: 0x90,
     0x4136EC: 0x90,
     0x4136ED: 0x90,
     0x4136EE: 0x90,
     0x4136EF: 0x90,
-    
+
+    # ignore result values other than 0x18 from function at 0x0041343d which itself calls CCardIO::ChkCardVolume()
     0x41C7C1: 0x90,
     0x41C7C2: 0x90,
-    
+
+    # ignore result values other than 0x18 from call to CCardIO::ChkCardVolume()
     0x413DF1: 0xEB,
-    
-    0x10005DD8: 0xEB,
-    0x10005E20: 0xEB,
+
+    dll_offset + 0x5DD8: 0xEB,  # ignore result of card reader/writer firmware version check
+    dll_offset + 0x5E20: 0xEB,  # ignore result of card reader/writer flash ID and memory content checks
 }
 
 # patches dependent on card size
 card_size_patches = [
-    # 64 kiBytes
+    # 512 kiBytes
     {
-        0x10005E6B: 0xEB,
+        dll_offset + 0x5E6B: 0xEB,  # mock card size of 512 kiBytes
     },
-    # 128 kiBytes
+    # 1024 kiBytes
     {
-        0x10005E6B: 0x90,
-        0x10005E6C: 0x90,
-        0x10005E6D: 0x90,
-        0x10005E6E: 0x90,
-        0x10005E6F: 0x90,
-        0x10005E70: 0x90,
-        0x10005E71: 0x90,
-        0x10005E72: 0x90,
-        0x10005E73: 0x90,
-        0x10005E74: 0xEB,
+        dll_offset + 0x5E6B: 0x90,  # mock card size of 1024 kiBytes
+        dll_offset + 0x5E6C: 0x90,
+        dll_offset + 0x5E6D: 0x90,
+        dll_offset + 0x5E6E: 0x90,
+        dll_offset + 0x5E6F: 0x90,
+        dll_offset + 0x5E70: 0x90,
+        dll_offset + 0x5E71: 0x90,
+        dll_offset + 0x5E72: 0x90,
+        dll_offset + 0x5E73: 0x90,
+        dll_offset + 0x5E74: 0xEB,
     },
-    # 256 kiBytes
+    # 2048 kiBytes
     {
-        0x10005E6B: 0x90,
-        0x10005E6C: 0x90,
-        0x10005E6D: 0x90,
-        0x10005E6E: 0x90,
-        0x10005E6F: 0x90,
-        0x10005E70: 0x90,
-        0x10005E71: 0x90,
-        0x10005E72: 0x90,
-        0x10005E73: 0x90,
-        0x10005E74: 0x90,
-        0x10005E75: 0x90,
-        0x10005E76: 0x90,
-        0x10005E77: 0x90,
-        0x10005E78: 0x90,
-        0x10005E79: 0x90,
-        0x10005E7A: 0x90,
-        0x10005E7B: 0x90,
-        0x10005E7C: 0x90,
-        0x10005E7D: 0xEB,
+        dll_offset + 0x5E6B: 0x90,  # mock card size of 2048 kiBytes
+        dll_offset + 0x5E6C: 0x90,
+        dll_offset + 0x5E6D: 0x90,
+        dll_offset + 0x5E6E: 0x90,
+        dll_offset + 0x5E6F: 0x90,
+        dll_offset + 0x5E70: 0x90,
+        dll_offset + 0x5E71: 0x90,
+        dll_offset + 0x5E72: 0x90,
+        dll_offset + 0x5E73: 0x90,
+        dll_offset + 0x5E74: 0x90,
+        dll_offset + 0x5E75: 0x90,
+        dll_offset + 0x5E76: 0x90,
+        dll_offset + 0x5E77: 0x90,
+        dll_offset + 0x5E78: 0x90,
+        dll_offset + 0x5E79: 0x90,
+        dll_offset + 0x5E7A: 0x90,
+        dll_offset + 0x5E7B: 0x90,
+        dll_offset + 0x5E7C: 0x90,
+        dll_offset + 0x5E7D: 0xEB,
     }
 ]
 
@@ -163,14 +171,12 @@ for imp in imports:
         f = r.cmd("pxw 4 @ {}".format(func_addr))
         f = f.split()
         f = int(f[1], 16)
-        #f += 0x10000000
-        # f -= cardio_addr
         print("32 bit word: 0x{:x}".format(f))
 
 print("Applying patches...")
 for patch_addr, patch_val in patches.items():
-    if patch_addr > 0x10000000:
-        patch_addr -= 0x10000000
+    if patch_addr > dll_offset:
+        patch_addr -= dll_offset
         patch_addr += cardio_addr
 
     # apply patches by writing known values at known addresses ("w [str] [@addr]")
@@ -178,11 +184,16 @@ for patch_addr, patch_val in patches.items():
     print(cmd)
     r.cmd(cmd)
 
-offset = cardio_addr + 0x6ad2
-# continue until address ("dcu")
 print("Continuing. GUI should open...")
 print("Output here will continue after card download attempt. Have fun!")
+
+# we get here while performing a send/write operation to the card;
+# extract the *address of the local memory buffer* where the card data is written to
+# from register RCX (Microsoft x64 calling convention?); this allows us to extract the buffer later;
+# technically continue execution until address ("dcu")
+offset = cardio_addr + 0x6ad2
 r.cmd("dcu {}".format(offset))
+print("Preparing embroidery card memory...")
 
 # r2pipe has some weird buffering issue with json commands and 
 # doesn't seem to work the first time
@@ -191,10 +202,7 @@ for i in range(5):
     mem = r.cmdj("p8j 4 @ rcx")
     if mem is not None and len(mem) > 0:
         break
- 
 
-# we get here after performing a write operation to the card
-print("Sending to virtual embroidery card...")
 mem = struct.pack("4B", *mem)
 mem = int.from_bytes(mem, "little")
 print("Memory is at: 0x{:x}".format(mem))
@@ -202,11 +210,12 @@ if mem == 0xFFFFFFFF:
     print("Invalid memory address PED-Basic may have been terminated w/o writing to the card.", file=stderr)
     exit(1)
 
+# continue execution until we hit hte address where we can extract the locally buffer card memory with all valid data;
+# all data has been written here before it would finally be transferred to the card via USB
 offset = cardio_addr + 0x6b0e
-# continue until that address
 r.cmd("dcu {}".format(offset))
+print("Embroidery card memory ready for extraction...")
 
-# Ditto
 card_size_bytes = cli_args.card_size*1024
 data = None
 for i in range(5):
@@ -236,6 +245,13 @@ else:
     else:
         print("[WARN] No higher card sizes are available!", file=stderr)
     print("[WARN] Reduction of pattern files (.pes) and/or stitches per pattern or pattern size could(!) also help.", file=stderr)
+
+# make broth where we see the ingredients for it (fixes an incomplete/corrupt file header);
+# meaning: search for b'\xffroth' at known locations and replace them with b'broth' (write the final 'b' character)
+broth_locations_candidates = [0xC0, 0x100, 0x170]  # memory location depends on the selected hoop size
+for l in broth_locations_candidates:
+    if data[l : l+5] == b'\xffroth':
+        data = data[0:l] + b'b' + data[l+1:]
 
 # perform a sanity check: look for expected data in the whole blob
 magic_string_expected = b'created by PED-Basic'
