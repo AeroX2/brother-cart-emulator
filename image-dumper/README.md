@@ -15,16 +15,16 @@ There are various command line options to change the default search paths (so th
 Run `python cracker.py --help` to list the options:
 
 ```
-usage: cracker.py [-h] [-cs {64,128,256}] [-r2b RADARE2_BINPATH]
+usage: cracker.py [-h] [-cs {512,1024,2048}] [-r2b RADARE2_BINPATH]
                   [-pedb PEDBASIC_BINPATH] [-o OUTPUT]
 
 Embroidery Card Image Dumping Tool
 
 options:
   -h, --help            show this help message and exit
-  -cs {64,128,256}, --card-size {64,128,256}
-                        Size of the memory card in kiBytes (valid options: 64,
-                        128, 256). Default is 64 kiBytes.
+  -cs {512,1024,2048}, --card-size {512,1024,2048}
+                        Size of the memory card in kiBytes (valid choices:
+                        512,1024,2048). Default is 512 kiBytes.
   -r2b RADARE2_BINPATH, --radare2-binpath RADARE2_BINPATH
                         Path to the radare2 binary (folder, not the binary
                         itself). Default is './radare2/bin' relative to the
