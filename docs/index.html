@@ -1,0 +1,187 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Brother Embroidery Card Toolkit</title>
+<style>
+  :root {
+    color-scheme: light dark;
+    --bg: #fbfbfa;
+    --panel: #ffffff;
+    --ink: #1b1b19;
+    --muted: #6b6b66;
+    --line: #e3e2dd;
+    --accent: #b4530a;
+    --ok: #2d7a45;
+    --warn: #a8730c;
+    --bad: #b3352b;
+    --mono: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, monospace;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg: #14140f;
+      --panel: #1c1c18;
+      --ink: #eceae3;
+      --muted: #9a988f;
+      --line: #33322c;
+      --accent: #e8873a;
+      --ok: #6fbd84;
+      --warn: #d9a441;
+      --bad: #e0796d;
+    }
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    background: var(--bg);
+    color: var(--ink);
+    font: 16px/1.6 -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  }
+  .wrap { max-width: 60rem; margin: 0 auto; padding: 2rem 1.25rem 4rem; }
+  header { border-bottom: 1px solid var(--line); padding-bottom: 1.5rem; margin-bottom: 2rem; }
+  h1 { font-size: 1.6rem; margin: 0 0 .4rem; letter-spacing: -.01em; }
+  h2 { font-size: 1.15rem; margin: 2.5rem 0 .75rem; letter-spacing: -.01em; }
+  p { margin: .5rem 0; }
+  .sub { color: var(--muted); }
+  a { color: var(--accent); }
+  code, .mono { font-family: var(--mono); font-size: .875em; }
+
+  .panel {
+    background: var(--panel);
+    border: 1px solid var(--line);
+    border-radius: 10px;
+    padding: 1.1rem 1.25rem;
+    margin: 1rem 0;
+  }
+  .panel.flag { border-left: 3px solid var(--warn); }
+
+  .drop {
+    border: 2px dashed var(--line);
+    border-radius: 10px;
+    padding: 2.25rem 1.25rem;
+    text-align: center;
+    color: var(--muted);
+    background: var(--panel);
+    cursor: pointer;
+    transition: border-color .15s, color .15s;
+  }
+  .drop:hover, .drop.over { border-color: var(--accent); color: var(--ink); }
+  .drop input { display: none; }
+  .drop strong { color: var(--ink); }
+
+  .card { border: 1px solid var(--line); border-radius: 10px; margin: .85rem 0; overflow: hidden; }
+  .card > .head {
+    display: flex; align-items: center; gap: .75rem; flex-wrap: wrap;
+    padding: .75rem 1rem; background: var(--panel); border-bottom: 1px solid var(--line);
+  }
+  .card > .head .name { font-weight: 600; flex: 1; min-width: 12rem; word-break: break-all; }
+  .card > .body { padding: .85rem 1rem; }
+
+  .pill {
+    font-size: .75rem; font-weight: 600; letter-spacing: .02em;
+    padding: .15rem .5rem; border-radius: 99px; border: 1px solid currentColor;
+    white-space: nowrap;
+  }
+  .pill.ok { color: var(--ok); }
+  .pill.warn { color: var(--warn); }
+  .pill.bad { color: var(--bad); }
+
+  dl { display: grid; grid-template-columns: max-content 1fr; gap: .25rem 1rem; margin: 0; }
+  dt { color: var(--muted); font-size: .875rem; }
+  dd { margin: 0; font-family: var(--mono); font-size: .875rem; word-break: break-word; }
+
+  ul.problems { margin: .75rem 0 0; padding-left: 1.1rem; }
+  ul.problems li { margin: .3rem 0; }
+
+  button {
+    font: inherit; font-size: .875rem; font-weight: 500;
+    padding: .4rem .8rem; border-radius: 7px;
+    border: 1px solid var(--line); background: var(--panel); color: var(--ink);
+    cursor: pointer;
+  }
+  button:hover { border-color: var(--accent); color: var(--accent); }
+  button[disabled] { opacity: .45; cursor: default; }
+  button.primary { background: var(--accent); border-color: var(--accent); color: #fff; }
+  button.primary:hover { opacity: .9; color: #fff; }
+
+  .actions { display: flex; gap: .5rem; flex-wrap: wrap; margin-top: 1rem; }
+
+  .tablewrap { overflow-x: auto; }
+  table { border-collapse: collapse; font-family: var(--mono); font-size: .8125rem; }
+  th, td { text-align: left; padding: .2rem .75rem .2rem 0; white-space: nowrap; }
+  th { color: var(--muted); font-weight: 500; }
+
+  footer { margin-top: 3rem; padding-top: 1.25rem; border-top: 1px solid var(--line); color: var(--muted); font-size: .875rem; }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<header>
+  <h1>Brother Embroidery Card Toolkit</h1>
+  <p class="sub">
+    Check whether a <code>.pes</code> design will be accepted by PED-Basic, repair the
+    one thing that usually stops it, and decode an existing card image. Everything runs
+    in your browser &mdash; no file ever leaves this machine.
+  </p>
+</header>
+
+<div class="panel flag">
+  <strong>Before you flash anything.</strong>
+  <p class="sub" style="margin-bottom:0">
+    The generator is verified to reproduce a real PED-Basic card
+    <em>byte&#8209;for&#8209;byte</em> from that card's own contents, and the stitch data
+    and previews are copied out of your <code>.pes</code> unchanged. But it has only
+    been checked against <strong>one</strong> reference card (hoop&nbsp;0, 512&nbsp;KiB),
+    and no output has yet been run on an actual sewing machine. Treat the first card
+    you write as a test.
+  </p>
+</div>
+
+<h2>Check <code>.pes</code> files</h2>
+<p class="sub">
+  This replays <code>CMExeEmb::ChkPesFormat</code> from PED-Basic 1.07 opcode by opcode,
+  so a pass here means the real application will accept the file. Add the designs you
+  want on one card, then build the image.
+</p>
+
+<label class="drop" id="pesDrop">
+  <input type="file" id="pesInput" multiple accept=".pes">
+  <strong>Drop .pes files here</strong><br>
+  or click to choose &mdash; several at once is fine
+</label>
+
+<div id="pesResults"></div>
+<div class="actions" id="pesActions" hidden>
+  <button class="primary" id="buildCard">Build image.bin</button>
+  <button id="fixAll">Repair all fixable files</button>
+  <button id="clearPes">Clear</button>
+</div>
+<div id="buildStatus"></div>
+
+<h2>Inspect a card image</h2>
+<p class="sub">
+  Decodes the header of an <code>image.bin</code> &mdash; hoop layout, the named header
+  fields, the 3-byte pointers and the pattern attribute table.
+</p>
+
+<label class="drop" id="binDrop">
+  <input type="file" id="binInput" accept=".bin">
+  <strong>Drop an image.bin here</strong><br>
+  or click to choose
+</label>
+
+<div id="binResults"></div>
+
+<footer>
+  Part of <a href="https://github.com/AeroX2/brother-cart-emulator">brother-cart-emulator</a>.
+  Format details and the reverse engineering behind them are in
+  <a href="https://github.com/AeroX2/brother-cart-emulator/blob/main/cardio-py/NOTES.md">cardio-py/NOTES.md</a>.
+</footer>
+
+</div>
+<script src="format.js"></script>
+<script src="app.js"></script>
+</body>
+</html>
