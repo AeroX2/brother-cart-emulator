@@ -1,0 +1,8 @@
+build/
+python-embed/
+__pycache__/
+cardio-py.log
+cardio_config.json
+capture.bin
+image.bin
+CardIO_orig.dll

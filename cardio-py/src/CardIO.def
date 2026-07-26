@@ -1,0 +1,14 @@
+; Export names and ordinals copied verbatim from the original
+; PED-Basic 1.07 CardIO.dll (version 3.2.1.1). pelite.exe binds by name, but the
+; ordinals are matched too so the replacement is interchangeable either way.
+LIBRARY CardIO
+EXPORTS
+    ??0CCardIO@@QAE@H@Z                                                                  @1
+    ??1CCardIO@@QAE@XZ                                                                   @2
+    ??4CCardIO@@QAEAAV0@ABV0@@Z                                                          @3
+    ?ChkCardVolume@CCardIO@@QAE?AW4CIOError@@AAVCObArray@@AAH1PAW4CCardAtrbType@@@Z      @4
+    ?ChkCardWriterConnected@CCardIO@@QAE?AW4CIOError@@HPAEPAH@Z                          @5
+    ?Receive@CCardIO@@QAE?AW4CIOError@@PAVCObArray@@HPBX1@Z                              @6
+    ?ResetCardID@CCardIO@@QAEXXZ                                                         @7
+    ?Send@CCardIO@@QAE?AW4CIOError@@AAVCObArray@@PBX1PAW4CCardAtrbType@@@Z               @8
+    ?WriteExecutableNum@CCardIO@@QAE?AW4CIOError@@H@Z                                    @9
